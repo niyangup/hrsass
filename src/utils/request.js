@@ -8,7 +8,7 @@ const service = axios.create({
 
 service.interceptors.request.use()
 service.interceptors.response.use(response => {
-  const { success, message, data } = response
+  const { success, message, data } = response.data
   if (success) {
     return data
   } else {
