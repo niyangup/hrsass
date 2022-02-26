@@ -13,7 +13,7 @@
         <div class="avatar-wrapper">
           <img src="@/assets/common/bigUserHeader.png" class="user-avatar">
           <i class="el-icon-caret-bottom"/>
-          <span class="name">管理员</span>
+          <span class="name">{{ username }}</span>
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
@@ -44,7 +44,8 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'avatar',
+      'username'
     ])
   },
   methods: {

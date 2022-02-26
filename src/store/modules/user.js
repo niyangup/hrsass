@@ -1,8 +1,9 @@
 import { getToken, removeToken, setToken } from '@/utils/auth'
-import { login } from '@/api/user'
+import { getUserinfo, login } from '@/api/user'
 
 const state = {
-  token: getToken()
+  token: getToken(),
+  userInfo: {}
 }
 
 const mutations = {
@@ -13,6 +14,12 @@ const mutations = {
   removeToken(state) {
     state.token = null
     removeToken()
+  },
+  setUserinfo(state, userInfo) {
+    state.userInfo = userInfo
+  },
+  removeUserinfo(state) {
+    state.userInfo = {}
   }
 }
 const actions = {
@@ -20,6 +27,13 @@ const actions = {
     const result = await login(data)
     console.log(result)
     context.commit('setToken', result)
+  },
+
+  async getUserinfo(context) {
+    const result = await getUserinfo()
+    context.commit('setUserinfo', result)
+    console.log(result)
+    return result
   }
 }
 export default {
