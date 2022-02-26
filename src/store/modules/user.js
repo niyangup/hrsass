@@ -19,11 +19,7 @@ const actions = {
   async login(context, data) {
     const result = await login(data)
     console.log(result)
-    if (result.data.success) {
-      context.commit('setToken', result.data.data)
-    } else {
-      console.error('登录失败')
-    }
+    context.commit('setToken', result)
   }
 }
 export default {
