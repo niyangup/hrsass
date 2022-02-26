@@ -11,7 +11,7 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img src="@/assets/common/bigUserHeader.png" class="user-avatar">
+          <img :src="avatar" class="user-avatar" v-image-error="imgErrorUrl">
           <i class="el-icon-caret-bottom"/>
           <span class="name">{{ username }}</span>
         </div>
@@ -38,6 +38,11 @@ import { mapGetters } from 'vuex'
 import Hamburger from '@/components/Hamburger'
 
 export default {
+  data() {
+    return {
+      imgErrorUrl: require('@/assets/common/head.jpg')
+    }
+  },
   components: {
     Hamburger
   },
@@ -152,6 +157,7 @@ export default {
           height: 30px;
           border-radius: 15px;
           vertical-align: middle;
+          object-fit: cover;
         }
 
         .el-icon-caret-bottom {

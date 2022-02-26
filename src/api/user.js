@@ -12,5 +12,9 @@ export function getUserinfo() {
   return request.post('/sys/profile')
 }
 
+export function getUserAvatarById(id) {
+  return request.get(`/sys/user/${id}`)
+}
+
 export function logout() {
 }
