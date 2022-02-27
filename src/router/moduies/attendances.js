@@ -13,5 +13,4 @@ export default {
       icon: 'skill'
     }
   }]
-
 }
