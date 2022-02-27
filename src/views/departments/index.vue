@@ -2,12 +2,13 @@
   <div class="dashboard-container">
     <div class="app-container">
       <el-card class="tree-card">
-        <tree-tools :tree-node="company" :is-root="true" />
+        <tree-tools :tree-node="company" :is-root="true" @onAdd="addDept"/>
         <el-tree :data="departs" :props="defaultProps">
-          <tree-tools slot-scope="{data}" :tree-node="data" @onDelete="getDepartments" />
+          <tree-tools slot-scope="{data}" :tree-node="data" @onAdd="addDept" @onDelete="getDepartments"/>
         </el-tree>
       </el-card>
     </div>
+    <add-dept :is-show="isShow" :tree-node="node"/>
   </div>
 </template>
 
@@ -15,10 +16,12 @@
 import TreeTools from '@/views/departments/components/tree-tools'
 import { getDepartments } from '@/api/departments'
 import { transListToTreeData } from '@/utils'
+import AddDept from '@/views/departments/components/add-dept'
 
 export default {
   name: 'Departments',
   components: {
+    AddDept,
     TreeTools
   },
 
@@ -30,7 +33,9 @@ export default {
       defaultProps: {
         label: 'name'
       },
-      company: { name: '中国村开心快乐哈哈哈哈哈公司', manager: '负责人' }
+      company: { name: '中国村开心快乐哈哈哈哈哈公司', manager: '负责人', id: '' },
+      isShow: false,
+      node: null
     }
   },
   created() {
@@ -40,6 +45,10 @@ export default {
     async getDepartments() {
       const result = await getDepartments()
       this.departs = transListToTreeData(result.depts, '')
+    },
+    addDept(node) {
+      this.isShow = true
+      this.node = node
     }
   }
 }

@@ -41,6 +41,7 @@ export default {
     handleClickItem(type) {
       if (type === 'add') {
         console.log('add')
+        this.$emit('onAdd', this.treeNode)
       } else if (type === 'edit') {
         console.log('edit')
       } else {
