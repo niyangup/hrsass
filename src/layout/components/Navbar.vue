@@ -38,13 +38,13 @@ import { mapGetters } from 'vuex'
 import Hamburger from '@/components/Hamburger'
 
 export default {
+  components: {
+    Hamburger
+  },
   data() {
     return {
       imgErrorUrl: require('@/assets/common/head.jpg')
     }
-  },
-  components: {
-    Hamburger
   },
   computed: {
     ...mapGetters([
@@ -57,9 +57,9 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    logout() {
+      this.$store.dispatch('user/logout')
+      this.$router.push(`/login`)
     }
   }
 }

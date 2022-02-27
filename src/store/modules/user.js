@@ -34,6 +34,10 @@ const actions = {
     const info = await getUserAvatarById(result.userId)
     context.commit('setUserinfo', { ...result, ...info })
     return result
+  },
+  logout(context) {
+    context.commit('removeToken')
+    context.commit('removeUserinfo')
   }
 }
 export default {
