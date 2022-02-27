@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible="isShow" title="新增部门" @close="closeDialog">
+  <el-dialog :visible="isShow" :title="title" @close="closeDialog">
     <el-form ref="deptForm" label-width="120px" :model="formData" :rules="rules">
 
       <el-form-item label="部门名称" prop="name">
@@ -31,7 +31,7 @@
 </template>>
 
 <script>
-import { addDept, getDepartments } from '@/api/departments'
+import { addDept, getDepartDetail, getDepartments, updateDepartments } from '@/api/departments'
 import { getEmployeeSimple } from '@/api/employees'
 
 export default {
@@ -48,14 +48,24 @@ export default {
   },
   data() {
     const checkDeptName = async(r, v, callback) => {
+      let exist = false
       const { depts } = await getDepartments()
-      const exist = depts.filter(item => item.pid === this.treeNode.id).some(item => item.name === v)
+      if (this.formData.id) {
+        exist = depts.filter(item => item.id !== this.formData.id && item.pid === this.treeNode.pid).some(item => item.name === v)
+      } else {
+        exist = depts.filter(item => item.pid === this.treeNode.id).some(item => item.name === v)
+      }
       exist ? callback(new Error(`同级部门下已经存在${v}了`)) : callback()
     }
 
     const checkDeptCode = async(r, v, callback) => {
       const { depts } = await getDepartments()
-      const exist = depts.some(item => item.code === v && v)
+      let exist = false
+      if (this.formData.id) {
+        exist = depts.some(item => item.id !== this.formData.id && item.code === v && v)
+      } else {
+        exist = depts.some(item => item.code === v && v)
+      }
       exist ? callback(new Error(`有部门下已经存在${v}了`)) : callback()
     }
     return {
@@ -82,26 +92,40 @@ export default {
       peoples: []
     }
   },
+  computed: {
+    title() {
+      return this.formData.id ? '编辑部门' : '新增子部门'
+    }
+  },
   methods: {
     async getEmployeeSimple() {
       this.peoples = await getEmployeeSimple()
     },
     closeDialog() {
+      this.formData = {
+        name: '',
+        code: '',
+        manager: '',
+        introduce: ''
+      }
       this.$refs.deptForm.resetFields()
       this.$emit('update:isShow', false)
     },
     handleSubmit() {
-      this.$refs.deptForm.validate((isSuccess) => {
+      this.$refs.deptForm.validate(async(isSuccess) => {
         if (isSuccess) {
-          addDept({
-            ...this.formData,
-            pid: this.treeNode.id
-          }).then(value => {
-            this.$emit('onAdd')
-            this.closeDialog()
-          })
+          if (this.formData.id) {
+            await updateDepartments(this.formData)
+          } else {
+            await addDept({ ...this.formData, pid: this.treeNode.id })
+          }
+          this.$emit('onAdd')
+          this.closeDialog()
         }
       })
+    },
+    async getDepartDetail(id) {
+      this.formData = await getDepartDetail(id)
     }
   }
 }

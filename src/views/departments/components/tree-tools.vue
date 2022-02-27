@@ -43,7 +43,7 @@ export default {
         console.log('add')
         this.$emit('onAdd', this.treeNode)
       } else if (type === 'edit') {
-        console.log('edit')
+        this.$emit('onEdit', this.treeNode)
       } else {
         this.$confirm('确定要删除该组织部门吗')
           .then(value => {

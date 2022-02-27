@@ -4,11 +4,11 @@
       <el-card class="tree-card">
         <tree-tools :tree-node="company" :is-root="true" @onAdd="addDept"/>
         <el-tree :data="departs" :props="defaultProps">
-          <tree-tools slot-scope="{data}" :tree-node="data" @onAdd="addDept" @onDelete="getDepartments"/>
+          <tree-tools slot-scope="{data}" :tree-node="data" @onAdd="addDept" @onDelete="getDepartments" @onEdit="edit"/>
         </el-tree>
       </el-card>
     </div>
-    <add-dept :is-show.sync="isShow" :tree-node="node" @onAdd="getDepartments"/>
+    <add-dept ref="addDept" :is-show.sync="isShow" :tree-node="node" @onAdd="getDepartments"/>
   </div>
 </template>
 
@@ -49,6 +49,11 @@ export default {
     addDept(node) {
       this.isShow = true
       this.node = node
+    },
+    edit(node) {
+      this.isShow = true
+      this.node = node
+      this.$refs.addDept.getDepartDetail(node.id)
     }
   }
 }
