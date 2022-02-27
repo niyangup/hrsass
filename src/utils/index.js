@@ -131,6 +131,5 @@ export function transListToTreeData(list, rootValue) {
       result.push(item)
     }
   })
-  console.log(result)
   return result
 }
