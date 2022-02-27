@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible="isShow" title="新增部门">
+  <el-dialog :visible="isShow" title="新增部门" @close="closeDialog">
     <el-form ref="deptForm" label-width="120px" :model="formData" :rules="rules">
 
       <el-form-item label="部门名称" prop="name">
@@ -22,7 +22,7 @@
 
     </el-form>
     <template v-slot:footer>
-      <el-button size="small">取消</el-button>
+      <el-button size="small" @click="closeDialog">取消</el-button>
       <el-button size="small" type="primary" @click="handleSubmit">确定</el-button>
     </template>
 
@@ -86,6 +86,10 @@ export default {
     async getEmployeeSimple() {
       this.peoples = await getEmployeeSimple()
     },
+    closeDialog() {
+      this.$refs.deptForm.resetFields()
+      this.$emit('update:isShow', false)
+    },
     handleSubmit() {
       this.$refs.deptForm.validate((isSuccess) => {
         if (isSuccess) {
@@ -94,7 +98,7 @@ export default {
             pid: this.treeNode.id
           }).then(value => {
             this.$emit('onAdd')
-            this.$refs.deptForm.resetFields()
+            this.closeDialog()
           })
         }
       })

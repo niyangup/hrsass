@@ -8,7 +8,7 @@
         </el-tree>
       </el-card>
     </div>
-    <add-dept :is-show="isShow" :tree-node="node" @onAdd="getDepartments"/>
+    <add-dept :is-show.sync="isShow" :tree-node="node" @onAdd="getDepartments"/>
   </div>
 </template>
 
