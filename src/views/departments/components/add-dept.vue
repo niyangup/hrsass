@@ -1,6 +1,6 @@
 <template>
   <el-dialog :visible="isShow" title="新增部门">
-    <el-form label-width="120px" :model="formData" :rules="rules">
+    <el-form ref="deptForm" label-width="120px" :model="formData" :rules="rules">
 
       <el-form-item label="部门名称" prop="name">
         <el-input v-model="formData.name" style="width: 80%" placeholder="1-50个字符"/>
@@ -23,7 +23,7 @@
     </el-form>
     <template v-slot:footer>
       <el-button size="small">取消</el-button>
-      <el-button size="small" type="primary">确定</el-button>
+      <el-button size="small" type="primary" @click="handleSubmit">确定</el-button>
     </template>
 
   </el-dialog>
@@ -31,7 +31,7 @@
 </template>>
 
 <script>
-import { getDepartments } from '@/api/departments'
+import { addDept, getDepartments } from '@/api/departments'
 import { getEmployeeSimple } from '@/api/employees'
 
 export default {
@@ -55,7 +55,7 @@ export default {
 
     const checkDeptCode = async(r, v, callback) => {
       const { depts } = await getDepartments()
-      const exist = depts.some(item => item.code.toString().toUpperCase() === v.toString().toUpperCase() && v)
+      const exist = depts.some(item => item.code === v && v)
       exist ? callback(new Error(`有部门下已经存在${v}了`)) : callback()
     }
     return {
@@ -85,6 +85,19 @@ export default {
   methods: {
     async getEmployeeSimple() {
       this.peoples = await getEmployeeSimple()
+    },
+    handleSubmit() {
+      this.$refs.deptForm.validate((isSuccess) => {
+        if (isSuccess) {
+          addDept({
+            ...this.formData,
+            pid: this.treeNode.id
+          }).then(value => {
+            this.$emit('onAdd')
+            this.$refs.deptForm.resetFields()
+          })
+        }
+      })
     }
   }
 }
