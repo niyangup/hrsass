@@ -1,4 +1,4 @@
-import { getToken, removeToken, setToken } from '@/utils/auth'
+import { getToken, removeToken, setTimeStamp, setToken } from '@/utils/auth'
 import { getUserAvatarById, getUserinfo, login } from '@/api/user'
 
 const state = {
@@ -27,6 +27,7 @@ const actions = {
     const result = await login(data)
     console.log(result)
     context.commit('setToken', result)
+    setTimeStamp()
   },
 
   async getUserinfo(context) {

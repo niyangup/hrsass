@@ -1,7 +1,10 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import Store from '@/store'
+import { getTimeStamp } from '@/utils/auth'
+import Router from '@/router'
 
+const timeOut = 1000 * 60 * 60
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
   timeout: 5000
@@ -9,7 +12,13 @@ const service = axios.create({
 
 service.interceptors.request.use(request => {
   if (Store.getters.token) {
-    request.headers['Authorization'] = `Bearer ${Store.getters.token}`
+    if (checkTimeStamp()) {
+      Store.dispatch('user/logout').then(null)
+      Router.push('/login')
+      return Promise.reject(new Error('token失效'))
+    } else {
+      request.headers['Authorization'] = `Bearer ${Store.getters.token}`
+    }
   }
   return request
 }, error => {
@@ -24,8 +33,20 @@ service.interceptors.response.use(response => {
     return Promise.reject(new Error(message))
   }
 }, error => {
-  Message.error(error.message)
+  if (error && error.response && error.response.data && error.response.data.code === 10002) {
+    Store.dispatch('user/logout').then(null)
+    Router.push('/login')
+  } else {
+    Message.error(error.message)
+  }
+
   return Promise.reject(error)
 })
+
+function checkTimeStamp() {
+  const now = Date.now()
+  const endTime = now - timeOut
+  return endTime > getTimeStamp()
+}
 
 export default service
