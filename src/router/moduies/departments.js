@@ -9,7 +9,8 @@ export default {
     path: '',
     component: departments,
     meta: {
-      title: 'departments'
+      title: '组织架构',
+      icon: 'tree'
     }
   }]
 

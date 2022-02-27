@@ -9,7 +9,8 @@ export default {
     path: '',
     component: settings,
     meta: {
-      title: 'settings'
+      title: '设置',
+      icon: 'setting'
     }
   }]
 

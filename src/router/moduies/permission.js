@@ -9,7 +9,8 @@ export default {
     path: '',
     component: permission,
     meta: {
-      title: 'permission'
+      title: '权限',
+      icon: 'lock'
     }
   }]
 

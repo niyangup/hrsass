@@ -9,7 +9,8 @@ export default {
     path: '',
     component: social,
     meta: {
-      title: 'social'
+      title: '社保',
+      icon: 'table'
     }
   }]
 }

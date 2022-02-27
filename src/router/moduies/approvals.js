@@ -9,7 +9,8 @@ export default {
     path: '',
     component: Approvals,
     meta: {
-      title: 'approvals'
+      title: '审批',
+      icon: 'tree-table'
     }
   }]
 }

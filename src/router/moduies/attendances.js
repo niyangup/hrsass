@@ -9,7 +9,8 @@ export default {
     path: '',
     component: attendances,
     meta: {
-      title: 'attendances'
+      title: '考勤',
+      icon: 'skill'
     }
   }]
 

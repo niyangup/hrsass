@@ -9,7 +9,8 @@ export default {
     path: '',
     component: salarys,
     meta: {
-      title: 'salarys'
+      title: '工资',
+      icon: 'money'
     }
   }]
 
