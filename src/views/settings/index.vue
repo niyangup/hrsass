@@ -11,9 +11,11 @@
               <el-table-column align="center" prop="name" label="姓名" width="240"/>
               <el-table-column align="center" prop="description" label="地址"/>
               <el-table-column align="center" prop="option" label="操作">
-                <el-button type="success" size="small">分配权限</el-button>
-                <el-button type="primary" size="small">编辑</el-button>
-                <el-button type="danger" size="small">删除</el-button>
+                <template slot-scope="{row}">
+                  <el-button type="success" size="small">分配权限</el-button>
+                  <el-button type="primary" size="small">编辑</el-button>
+                  <el-button type="danger" size="small" @click="delRole(row.id)">删除</el-button>
+                </template>
               </el-table-column>
             </el-table>
 
@@ -61,7 +63,7 @@
 </template>
 
 <script>
-import { getCompanyInfo, getRoleList } from '@/api/setting'
+import { deleteRole, getCompanyInfo, getRoleList } from '@/api/setting'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -88,8 +90,8 @@ export default {
   methods: {
     async getRoleList() {
       const { total, rows } = await getRoleList(this.page)
-      this.page.total = total
       this.list = rows
+      this.page.total = total
     },
     async getCompanyInfo() {
       this.formData = await getCompanyInfo(this.companyId)
@@ -97,6 +99,16 @@ export default {
     changPage(newPage) {
       this.page.page = newPage
       this.getRoleList()
+    },
+    async delRole(id) {
+      try {
+        await this.$confirm('确认删除该角色吗?')
+        await deleteRole(id)
+        await this.getRoleList()
+        this.$message.success('删除成功')
+      } catch (e) {
+        console.error(e)
+      }
     }
   }
 }
