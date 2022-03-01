@@ -1,17 +1,17 @@
 <template>
 
-  <el-dialog :visible="showDialog" title="新增员工">
-    <el-form label-width="120px" :model="formData" :rules="rules">
+  <el-dialog :visible="showDialog" title="新增员工" @close="onCancel">
+    <el-form ref="add" label-width="120px" :model="formData" :rules="rules">
       <el-form-item label="姓名" prop="username">
-        <el-input v-model="formData.username" style="width: 50%" placeholder="请输入姓名" />
+        <el-input v-model="formData.username" style="width: 50%" placeholder="请输入姓名"/>
       </el-form-item>
 
       <el-form-item label="手机" prop="mobile">
-        <el-input v-model="formData.mobile" style="width: 50%" placeholder="请输入手机号" />
+        <el-input v-model="formData.mobile" style="width: 50%" placeholder="请输入手机号"/>
       </el-form-item>
 
       <el-form-item label="入职时间" prop="timeOfEntry">
-        <el-date-picker v-model="formData.timeOfEntry" style="width: 50%" placeholder="请选择入职时间" />
+        <el-date-picker v-model="formData.timeOfEntry" style="width: 50%" placeholder="请选择入职时间"/>
       </el-form-item>
 
       <el-form-item label="聘用形式" prop="formOfEmployment">
@@ -21,7 +21,7 @@
       </el-form-item>
 
       <el-form-item label="工号" prop="workNumber">
-        <el-input v-model="formData.workNumber" style="width: 50%" placeholder="请输入工号" />
+        <el-input v-model="formData.workNumber" style="width: 50%" placeholder="请输入工号"/>
       </el-form-item>
 
       <el-form-item label="部门" prop="departmentName">
@@ -52,8 +52,8 @@
     </el-form>
     <template v-slot:footer>
       <el-row type="flex" justify="center">
-        <el-button size="small">取消</el-button>
-        <el-button size="small" type="primary">确定</el-button>
+        <el-button size="small" @click="onCancel">取消</el-button>
+        <el-button size="small" type="primary" @click="onConfirm">确定</el-button>
       </el-row>
     </template>
   </el-dialog>
@@ -65,6 +65,7 @@
 import { getDepartments } from '@/api/departments'
 import { transListToTreeData } from '@/utils'
 import Employees from '@/api/constant/employees'
+import { addEmployee } from '@/api/employees'
 
 export default {
   name: 'AddEmployees',
@@ -114,6 +115,30 @@ export default {
     selectNode(node) {
       this.formData.departmentName = node.name
       this.showTree = false
+    },
+    onCancel() {
+      this.formData = {
+        username: '',
+        mobile: '',
+        formOfEmployment: '',
+        workNumber: '',
+        departmentName: '',
+        timeOfEntry: '',
+        correctionTime: ''
+      }
+      this.$refs.add.resetFields()
+      this.$emit('update:showDialog', false)
+    },
+    async onConfirm() {
+      try {
+        console.log(this.$parent)
+        await this.$refs.add.validate()
+        await addEmployee(this.formData)
+        this.$parent.getEmployeeList()
+        this.$parent.showDialog = false
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
 }
