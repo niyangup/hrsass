@@ -10,7 +10,7 @@
         <template v-slot:after>
           <el-button size="small" type="success">excel导入</el-button>
           <el-button size="small" type="danger">excel导出</el-button>
-          <el-button size="small" type="primary">新增员工</el-button>
+          <el-button size="small" type="primary" @click="showDialog=true">新增员工</el-button>
         </template>
 
       </page-tools>
@@ -54,6 +54,7 @@
           />
         </el-row>
       </el-card>
+      <add-emplouees :show-dialog.sync="showDialog"></add-emplouees>
     </div>
   </div>
 </template>
@@ -61,9 +62,11 @@
 <script>
 import { delEmployee, getEmployeeList } from '@/api/employees'
 import Employees from '@/api/constant/employees'
+import AddEmplouees from '@/views/emplouees/add-emplouees'
 
 export default {
   name: 'Emplouees',
+  components: { AddEmplouees },
   data() {
     return {
       list: [],
@@ -72,7 +75,8 @@ export default {
         size: 10,
         total: 0
       },
-      loading: false
+      loading: false,
+      showDialog: false
     }
   },
   created() {
