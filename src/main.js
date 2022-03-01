@@ -16,12 +16,14 @@ import '@/icons'
 import '@/permission'
 
 import * as directives from './directives'
+import Components from '@/components'
 
 for (const key in directives) {
   Vue.directive(key, directives[key])
 }
 
 Vue.use(ElementUI, { locale })
+Vue.use(Components)
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
 
