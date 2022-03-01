@@ -20,10 +20,18 @@
           <el-table-column type="index" label="序号" sortable=""/>
           <el-table-column label="姓名" prop="username" sortable=""/>
           <el-table-column label="工号" prop="workNumber" sortable=""/>
-          <el-table-column label="聘用形式" sortable="" prop="formOfEmployment"/>
+          <el-table-column label="聘用形式" :formatter="formatEmployment" sortable="" prop="formOfEmployment"/>
           <el-table-column label="部门" sortable="" prop="departmentName"/>
-          <el-table-column label="入职时间" sortable="" prop="timeOfEntry"/>
-          <el-table-column label="账户状态" sortable="" prop="enableState"/>
+          <el-table-column label="入职时间" sortable="" prop="timeOfEntry">
+            <template v-slot="{row}">
+              {{ row.timeOfEntry | formatDate }}
+            </template>
+          </el-table-column>
+          <el-table-column label="账户状态" sortable="" prop="enableState">
+            <template v-slot="{row:{enableState}}">
+              <el-switch :value="enableState===1"></el-switch>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" sortable="" fixed="right" width="280">
             <template>
               <el-button type="text" size="small">查看</el-button>
@@ -52,6 +60,7 @@
 
 <script>
 import { getEmployeeList } from '@/api/employees'
+import Employees from '@/api/constant/employees'
 
 export default {
   name: 'Emplouees',
@@ -80,6 +89,10 @@ export default {
     changePage(newPage) {
       this.page.page = newPage
       this.getEmployeeList()
+    },
+    formatEmployment(row, column, cellValue, index) {
+      const type = Employees.hireType.find(value => value.id === cellValue)
+      return type ? type.value : '未知'
     }
   }
 

@@ -17,9 +17,13 @@ import '@/permission'
 
 import * as directives from './directives'
 import Components from '@/components'
+import * as filters from './filters'
 
 for (const key in directives) {
   Vue.directive(key, directives[key])
+}
+for (const key in filters) {
+  Vue.filter(key, filters[key])
 }
 
 Vue.use(ElementUI, { locale })
