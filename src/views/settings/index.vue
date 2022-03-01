@@ -141,7 +141,6 @@ export default {
       this.showDialog = true
     },
     async onConfirm() {
-      console.log(123)
       try {
         await this.$refs.roleForm.validate()
         if (this.roleForm.id) {
