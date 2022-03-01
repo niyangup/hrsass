@@ -3,30 +3,41 @@
   <el-dialog :visible="showDialog" title="新增员工">
     <el-form label-width="120px" :model="formData" :rules="rules">
       <el-form-item label="姓名" prop="username">
-        <el-input v-model="formData.username" style="width: 50%" placeholder="请输入姓名"/>
+        <el-input v-model="formData.username" style="width: 50%" placeholder="请输入姓名" />
       </el-form-item>
 
       <el-form-item label="手机" prop="mobile">
-        <el-input v-model="formData.mobile" style="width: 50%" placeholder="请输入手机号"/>
+        <el-input v-model="formData.mobile" style="width: 50%" placeholder="请输入手机号" />
       </el-form-item>
 
       <el-form-item label="入职时间" prop="timeOfEntry">
-        <el-date-picker v-model="formData.timeOfEntry" style="width: 50%" placeholder="请选择入职时间"/>
+        <el-date-picker v-model="formData.timeOfEntry" style="width: 50%" placeholder="请选择入职时间" />
       </el-form-item>
 
       <el-form-item label="聘用形式" prop="formOfEmployment">
-        <el-select v-model="formData.formOfEmployment" style="width: 50%" placeholder="请输入聘用形式"/>
+        <el-select v-model="formData.formOfEmployment" style="width: 50%" placeholder="请输入聘用形式">
+          <el-option v-for="item in employEnum" :key="item.id" :value="item.id" :label="item.value"/>
+        </el-select>
       </el-form-item>
 
       <el-form-item label="工号" prop="workNumber">
-        <el-input v-model="formData.workNumber" style="width: 50%" placeholder="请输入工号"/>
+        <el-input v-model="formData.workNumber" style="width: 50%" placeholder="请输入工号" />
       </el-form-item>
 
       <el-form-item label="部门" prop="departmentName">
         <el-input
           v-model="formData.departmentName"
           style="width: 50%"
-          placeholder="请输入部门"
+          placeholder="请选择部门"
+          @focus="fetchDepts"
+        />
+        <el-tree
+          v-if="showTree"
+          v-loading="loading"
+          :data="treeData"
+          :props="{label:'name'}"
+          :default-expand-all="true"
+          @node-click="selectNode"
         />
       </el-form-item>
 
@@ -50,6 +61,10 @@
 </template>
 
 <script>
+
+import { getDepartments } from '@/api/departments'
+import { transListToTreeData } from '@/utils'
+import Employees from '@/api/constant/employees'
 
 export default {
   name: 'AddEmployees',
@@ -81,7 +96,24 @@ export default {
         workNumber: [{ required: true, message: '工号不能为空', trigger: 'blur' }],
         departmentName: [{ required: true, message: '部门不能为空', trigger: 'change' }],
         timeOfEntry: [{ required: true, message: '入职时间', trigger: 'blur' }]
-      }
+      },
+      treeData: [],
+      showTree: false,
+      loading: false,
+      employEnum: Employees.hireType
+    }
+  },
+  methods: {
+    async fetchDepts() {
+      this.showTree = true
+      this.loading = true
+      const { depts } = await getDepartments()
+      this.treeData = transListToTreeData(depts, '')
+      this.loading = false
+    },
+    selectNode(node) {
+      this.formData.departmentName = node.name
+      this.showTree = false
     }
   }
 }
