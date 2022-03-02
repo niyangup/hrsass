@@ -9,7 +9,7 @@
 
         <template v-slot:after>
           <el-button size="small" type="success" @click="$router.push('/import')">excel导入</el-button>
-          <el-button size="small" type="danger">excel导出</el-button>
+          <el-button size="small" type="danger" @click="exportData">excel导出</el-button>
           <el-button size="small" type="primary" @click="showDialog=true">新增员工</el-button>
         </template>
 
@@ -107,6 +107,15 @@ export default {
       } catch (e) {
         console.log(e)
       }
+    },
+    exportData() {
+      import('@/vendor/Export2Excel').then(excel => {
+        excel.export_json_to_excel({
+          header: ['姓名', '工资'],
+          data: [[1, 2]],
+          filename: '员工工资表'
+        })
+      })
     }
   }
 
