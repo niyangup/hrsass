@@ -13,6 +13,7 @@ import permission from '@/router/moduies/permission'
 import salarys from '@/router/moduies/salarys'
 import settings from '@/router/moduies/settings'
 import social from '@/router/moduies/social'
+import Import from '@/views/import'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -63,8 +64,18 @@ export const constantRoutes = [
     }]
   },
 
+  {
+    path: '/import',
+    component: Layout,
+    hidden: false,
+    children: [{
+      path: '',
+      component: Import
+    }]
+  },
+
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true },
+  { path: '*', redirect: '/404', hidden: true }
 ]
 // 动态路由
 export const asyncRouters = [
