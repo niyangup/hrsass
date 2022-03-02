@@ -46,3 +46,31 @@ export function saveUserDetailById(data) {
     data
   })
 }
+
+export function getPersonalDetail(id) {
+  return request({
+    url: `/employees/${id}/personalInfo`
+  })
+}
+
+export function updatePersonal(data) {
+  return request({
+    url: `/employees/${data.userId}/personalInfo`,
+    method: 'put',
+    data
+  })
+}
+
+export function getJobDetail(id) {
+  return request({
+    url: `/employees/${id}/jobs`
+  })
+}
+
+export function updateJob(data) {
+  return request({
+    url: `/employees/${data.userId}/jobs`,
+    method: 'put',
+    data
+  })
+}
