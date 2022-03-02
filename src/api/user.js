@@ -18,3 +18,10 @@ export function getUserAvatarById(id) {
 
 export function logout() {
 }
+
+export function getUserDetailById(id) {
+  return request({
+    url: `/sys/user/${id}`
+  })
+}
+
