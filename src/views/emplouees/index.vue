@@ -29,7 +29,7 @@
           </el-table-column>
           <el-table-column label="账户状态" sortable="" prop="enableState">
             <template v-slot="{row:{enableState}}">
-              <el-switch :value="enableState===1"></el-switch>
+              <el-switch :value="enableState===1"/>
             </template>
           </el-table-column>
           <el-table-column label="操作" sortable="" fixed="right" width="280">
@@ -54,7 +54,7 @@
           />
         </el-row>
       </el-card>
-      <add-emplouees :show-dialog.sync="showDialog"></add-emplouees>
+      <add-emplouees :show-dialog.sync="showDialog"/>
     </div>
   </div>
 </template>
@@ -63,6 +63,7 @@
 import { delEmployee, getEmployeeList } from '@/api/employees'
 import Employees from '@/api/constant/employees'
 import AddEmplouees from '@/views/emplouees/add-emplouees'
+import { formatDate } from '@/filters'
 
 export default {
   name: 'Emplouees',
@@ -108,17 +109,43 @@ export default {
         console.log(e)
       }
     },
-    exportData() {
+    exportData: async function() {
+      const headers = {
+        '姓名': 'username',
+        '手机号': 'mobile',
+        '入职日期': 'timeOfEntry',
+        '聘用形式': 'formOfEmployment',
+        '转正日期': 'correctionTime',
+        '工号': 'workNumber',
+        '部门': 'departmentName'
+      }
+
+      const { rows } = await getEmployeeList({ page: 1, size: this.page.total })
+      const data = this.formatJson(headers, rows)
       import('@/vendor/Export2Excel').then(excel => {
         excel.export_json_to_excel({
-          header: ['姓名', '工资'],
-          data: [[1, 2]],
+          header: Object.keys(headers),
+          data: data,
           filename: '员工工资表'
         })
       })
+    },
+    formatJson(headers, rows) {
+      // 首先遍历数组
+      // [{ username: '张三'},{},{}]  => [[’张三'],[],[]]
+      return rows.map(item => {
+        return Object.keys(headers).map(key => {
+          if (headers[key] === 'timeOfEntry' || headers[key] === 'correctionTime') {
+            return formatDate(item[headers[key]]) // 返回格式化之前的时间
+          } else if (headers[key] === 'formOfEmployment') {
+            const en = Employees.hireType.find(obj => obj.id === item[headers[key]])
+            return en ? en.value : '未知'
+          }
+          return item[headers[key]]
+        }) // => ["张三", "13811"，"2018","1", "2018", "10002"]
+      })
     }
   }
-
 }
 </script>
 
