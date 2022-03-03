@@ -21,7 +21,13 @@
           <el-table-column label="姓名" prop="username" sortable=""/>
           <el-table-column label="头像" prop="avatar">
             <template v-slot="{row}">
-              <img v-imageError="require('@/assets/common/bigUserHeader.png')" :src="row.staffPhoto" alt="" style="border-radius: 50%; width: 100px; height: 100px; padding: 10px">
+              <img
+                @click="showQrCode(row.staffPhoto)"
+                v-imageError="require('@/assets/common/bigUserHeader.png')"
+                :src="row.staffPhoto"
+                alt=""
+                style="border-radius: 50%; width: 100px; height: 100px; padding: 10px"
+              >
             </template>
           </el-table-column>
           <el-table-column label="工号" prop="workNumber" sortable=""/>
@@ -60,6 +66,12 @@
         </el-row>
       </el-card>
       <add-emplouees :show-dialog.sync="showDialog"/>
+      <el-dialog title="二维码" :visible.sync="showCodeDialog">
+        <el-row type="flex" justify="center">
+          <canvas ref="canvas"/>
+        </el-row>
+
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -69,12 +81,14 @@ import { delEmployee, getEmployeeList } from '@/api/employees'
 import Employees from '@/api/constant/employees'
 import AddEmplouees from '@/views/emplouees/add-emplouees'
 import { formatDate } from '@/filters'
+import qrcode from 'qrcode'
 
 export default {
   name: 'Emplouees',
   components: { AddEmplouees },
   data() {
     return {
+      showCodeDialog: false,
       list: [],
       page: {
         page: 1,
@@ -149,6 +163,16 @@ export default {
           return item[headers[key]]
         }) // => ["张三", "13811"，"2018","1", "2018", "10002"]
       })
+    },
+    showQrCode(url) {
+      if (url) {
+        this.showCodeDialog = true
+        this.$nextTick(() => {
+          qrcode.toCanvas(this.$refs.canvas, url)
+        })
+      } else {
+        this.$message.warning('该用户还未上传头像')
+      }
     }
   }
 }

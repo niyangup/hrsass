@@ -1,6 +1,7 @@
 import Layout from '@/layout'
 import emplouees from '@/views/emplouees'
 import Detail from '@/views/emplouees/detail'
+import Print from '@/views/emplouees/print'
 
 export default {
   path: '/employees',
@@ -20,6 +21,13 @@ export default {
       title: '员工详情'
     },
     hidden: true
-  }]
-
+  }, {
+    path: 'print/:id',
+    component: Print,
+    meta: {
+      title: '员工打印'
+    },
+    hidden: true
+  }
+  ]
 }
