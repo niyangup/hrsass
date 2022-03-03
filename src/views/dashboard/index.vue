@@ -2,7 +2,6 @@
   <div class="dashboard-container">
     <div class="dashboard-text">
       123
-      <image-upload></image-upload>
     </div>
   </div>
 </template>
