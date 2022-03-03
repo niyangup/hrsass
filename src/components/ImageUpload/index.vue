@@ -17,6 +17,8 @@
     <el-dialog :visible.sync="showDialog" title="图片预览">
       <img :src="imgUrl" alt="" style="width: 100%">
     </el-dialog>
+
+    <el-progress :percentage="progress" style="width: 180px" v-if="showProgress"/>
   </div>
 </template>
 
@@ -27,9 +29,11 @@ export default {
   name: 'ImageUpload',
   data() {
     return {
+      showProgress: false,
       showDialog: false,
       imgUrl: '',
-      fileList: []
+      fileList: [],
+      progress: 0
     }
   },
   computed: {
@@ -60,6 +64,7 @@ export default {
         this.$message.error('上传图片只能是 JPG、GIF、BMP、PNG 格式!')
         return false
       }
+      this.showProgress = true
       return true
     },
     handleUpload(p) {
@@ -74,10 +79,12 @@ export default {
           Key: p.file.name, /* 存储在桶里的对象键（例如1.jpg，a/b/test.txt），必须字段 */
           StorageClass: 'STANDARD',
           Body: p.file, // 上传文件对象
-          onProgress: function(progressData) {
-            console.log(JSON.stringify(progressData))
+          onProgress: (progressData) => {
+            this.progress = progressData.percent * 100
           }
         }, (err, data) => {
+          this.showProgress = false
+          this.progress = 0
           if (!err && data.statusCode === 200) {
             this.fileList = this.fileList.map(item => {
               if (item.uid === p.file.uid) {
