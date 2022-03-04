@@ -3,7 +3,7 @@ import settings from '@/views/settings'
 
 export default {
   path: '/settings',
-  // name: 'settings',
+  name: 'settings',
   component: Layout,
   children: [{
     path: '',

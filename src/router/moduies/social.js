@@ -3,7 +3,7 @@ import social from '@/views/social'
 
 export default {
   path: '/social',
-  // name: 'social',
+  name: 'social',
   component: Layout,
   children: [{
     path: '',

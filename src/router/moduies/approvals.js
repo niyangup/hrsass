@@ -3,7 +3,7 @@ import Approvals from '@/views/approvals'
 
 export default {
   path: '/approvals',
-  // name: 'approvals',
+  name: 'approvals',
   component: Layout,
   children: [{
     path: '',

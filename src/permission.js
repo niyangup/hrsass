@@ -11,9 +11,13 @@ router.beforeEach(async(to, from, next) => {
       next('/')
     } else {
       if (!Store.getters.userId) {
-        await Store.dispatch('user/getUserinfo')
+        const { roles } = await Store.dispatch('user/getUserinfo')
+        const routes = await Store.dispatch('permission/filterRoutes', roles.menus)
+        router.addRoutes(routes)
+        next(to.path)
+      } else {
+        next()
       }
-      next()
     }
   } else {
     if (whiteList.includes(to.path)) {

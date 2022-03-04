@@ -3,7 +3,7 @@ import salarys from '@/views/salarys'
 
 export default {
   path: '/salarys',
-  // name: 'salarys',
+  name: 'salarys',
   component: Layout,
   children: [{
     path: '',

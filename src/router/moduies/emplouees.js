@@ -5,7 +5,7 @@ import Print from '@/views/emplouees/print'
 
 export default {
   path: '/employees',
-  // name: 'employees',
+  name: 'employees',
   component: Layout,
   children: [{
     path: '',

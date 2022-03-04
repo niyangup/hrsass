@@ -3,7 +3,7 @@ import departments from '@/views/departments'
 
 export default {
   path: '/departments',
-  // name: 'departments',
+  name: 'departments',
   component: Layout,
   children: [{
     path: '',
