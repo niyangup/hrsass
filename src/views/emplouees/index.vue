@@ -22,11 +22,11 @@
           <el-table-column label="头像" prop="avatar">
             <template v-slot="{row}">
               <img
-                @click="showQrCode(row.staffPhoto)"
                 v-imageError="require('@/assets/common/bigUserHeader.png')"
                 :src="row.staffPhoto"
                 alt=""
                 style="border-radius: 50%; width: 100px; height: 100px; padding: 10px"
+                @click="showQrCode(row.staffPhoto)"
               >
             </template>
           </el-table-column>
@@ -49,7 +49,7 @@
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small">角色</el-button>
+              <el-button type="text" size="small" @click="handleRole(row.id)">角色</el-button>
               <el-button type="text" size="small" @click="del(row.id)">删除</el-button>
             </template>
           </el-table-column>
@@ -72,6 +72,8 @@
         </el-row>
 
       </el-dialog>
+
+      <assign-role ref="assignRole" :show-role-dialog.sync="showRoleDialog" :user-id="userId"/>
     </div>
   </div>
 </template>
@@ -82,12 +84,15 @@ import Employees from '@/api/constant/employees'
 import AddEmplouees from '@/views/emplouees/add-emplouees'
 import { formatDate } from '@/filters'
 import qrcode from 'qrcode'
+import AssignRole from '@/views/emplouees/assign-role'
 
 export default {
   name: 'Emplouees',
-  components: { AddEmplouees },
+  components: { AddEmplouees, AssignRole },
   data() {
     return {
+      userId: '',
+      showRoleDialog: false,
       showCodeDialog: false,
       list: [],
       page: {
@@ -103,6 +108,12 @@ export default {
     this.getEmployeeList()
   },
   methods: {
+    handleRole(id) {
+      this.userId = id
+      this.$refs.assignRole.getUserDetailById(id).then(value => {
+        this.showRoleDialog = true
+      })
+    },
     async getEmployeeList() {
       this.loading = true
       const { total, rows } = await getEmployeeList(this.page)
